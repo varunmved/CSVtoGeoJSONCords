@@ -1,7 +1,9 @@
+import csv
+import json
+
 featureCollectionString = """{
   "type": "FeatureCollection",
   "features": ["""
-
 typeString = """{
   "type": "Feature",
   "geometry": {
@@ -19,18 +21,32 @@ webString = '"Web Page": '
 closeBracket1 = '  },'
 closeBracket2 = '  }'
 closeLastBracket = '}'
+closeBrace = ']'
 
-nameVal = "John Company"
-addVal = "6842 asdfa asdfa, asfdadf, asfdasdfa, 23432"
-phoneVal= "(916)-234-2343"
-emailVal = "johnnycheese@gmail.com"
-webVal = "ayylmoa.com"
+#########################
 
-lat = 38.1232
-longi = -123.21321
+#csv handling
+written = open("dvbetestjson.json","w")
+outString = featureCollectionString + '\n' 
+written.write(outString)
+i=0
 
-
-
-outString = featureCollectionString + '\n' + typeString + "[" + str(lat) + "," + str(longi) + "]" + '\n'+ closeBracket1+ '\n'+propertyString + '\n' + nameString + '"' + nameVal + '"' + "\n"+ addString + '"' + addVal + '"' + "\n"+ phoneString + '"' + phoneVal + '"' + "\n"+ emailString + '"' + emailVal + '"' + "\n"+ webString + '"' + webVal + '"' + "\n"
-
-print(outString)
+with open("dvbe_for_geojson.csv") as csvfile:
+		reader = csv.DictReader(csvfile)
+		for row in reader:
+			nameVal=row['NAME']
+			emailVal=row['EMAIL']
+			phoneVal=row['PHONE']
+			webVal=row['WEB PAGE']
+			addVal=row['ADDRESS']
+			lat=row['latitude']
+			longi=row['longitude']
+			outString = typeString + "[" + str(longi) + "," + str(lat) + "]" + '\n'+ closeBracket1+ '\n'+propertyString 
+			outString += '\n' + nameString + '"' + nameVal + '",' + "\n"+ addString + '"' + addVal + '",' 
+			outString += "\n"+ phoneString + '"' + phoneVal + '",' + "\n"+ emailString + '"' + emailVal + '",' 
+			outString += "\n"+ webString + '"' + webVal + '"' + "\n"
+			outString +=closeBracket2+'\n'+closeBracket1+'\n'
+			written.write(outString)
+#outofloop
+outString+=closeBrace+'\n'+closeBracket2
+written.close()
